@@ -1,143 +1,116 @@
 import React from 'react';
-import { View, SafeAreaView, Image, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Image, FlatList } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/colors';
 
-const CartScreen = ({ navigation, route }) => {
-  const plant = route.params;
+const CartScreen = ({ navigation }) => {
+  const plantsInCart = [
+    { id: 1, img: require('../assets/plant1.png'), plant: 'Plant 1', price: 10, quantity: 1 },
+    { id: 2, img: require('../assets/plant2.png'), plant: 'Plant 2', price: 20, quantity: 2 },
+    { id: 3, img: require('../assets/plant3.png'), plant: 'Plant 3', price: 30, quantity: 3 },
+  ];
+
+  const calculateTotalPrice = (plantsInCart) => {
+    let totalPrice = 0;
+    plantsInCart.forEach((plant) => {
+      totalPrice += plant.price * plant.quantity;
+    });
+    return totalPrice.toFixed(2);
+  };
+
+  const CartCard = ({ item }) => {
+    return (
+      <View style={styles.cartCard}>
+        <Image source={item.img} style={{ height: 80, width: 80 }} />
+        <View style={{ height: 100, marginLeft: 10, paddingVertical: 20, flex: 1 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.plant}</Text>
+          <Text style={{ fontSize: 17, fontWeight: 'bold' }}>${item.price}</Text>
+        </View> 
+        <View style={styles.minusBtn}>
+  <Text style={styles.minusBtnText}>-</Text>
+</View>
+<Text
+  style={{
+    fontSize: 20,
+    marginHorizontal: 10,
+    fontWeight: 'bold',
+  }}
+>
+  1
+</Text>
+<View style={styles.plusBtn}>
+  <Text style={styles.plusBtnText}>+</Text>
+</View>
+        <View style={{ marginRight: 20, alignItems: 'center' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.quantity}</Text>
+          <View style={styles.actionBtn}>
+            <TouchableOpacity onPress={() => console.log('Remove pressed.')}>
+              <Icon name="remove" size={25} color={COLORS.white} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log('Add pressed.')}>
+              <Icon name="add" size={25} color={COLORS.white} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.white,
-      }}
-    >
+    <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <View style={styles.header}>
-        <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-        <Icon name="shopping-cart" size={28} />
+        <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Cart</Text>
       </View>
-      <View style={styles.imageContainer}>
-        <Image source={plant.img} style={{ resizeMode: 'contain', flex: 1 }} />
-      </View>
-      <View style={styles.detailsContainer}>
-        <View
-          style={{
-            marginLeft: 20,
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-          }}
-        >
-          <View style={styles.line} />
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Best choice</Text>
-        </View>
-        <View
-          style={{
-            marginLeft: 20,
-            marginTop: 20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{plant.name}</Text>
-          <View style={styles.priceTag}>
-            <Text
-              style={{
-                marginLeft: 15,
-                color: COLORS.white,
-                fontWeight: 'bold',
-                fontSize: 16,
-              }}
-            >
-              ${plant.price}
-            </Text>
-          </View>
-        </View>
-        <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>About</Text>
-          <Text
-            style={{
-              color: 'grey',
-              fontSize: 16,
-              lineHeight: 22,
-              marginTop: 10,
-            }}
-          >
-            {plant.about}
-          </Text>
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <View style={styles.borderBtn}>
-                <Text style={styles.borderBtnText}>-</Text>
-              </View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginHorizontal: 10,
-                  fontWeight: 'bold',
-                }}
-              >
-                1
-              </Text>
-              <View style={styles.borderBtn}>
-                <Text style={styles.borderBtnText}>+</Text>
-              </View>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        data={plantsInCart}
+        renderItem={({ item }) => <CartCard item={item} />}
+        ListFooterComponent={() => (
+          <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Total Price</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>${calculateTotalPrice(plantsInCart)}</Text>
             </View>
-
             <View style={styles.buyBtn}>
-              <Text
-                style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}
-              >
-                Buy
-              </Text>
+              <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>CHECKOUT</Text>
             </View>
           </View>
-        </View>
-      </View>
+        )}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: 20,
-    marginTop: 20,
+    paddingVertical: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 20,
   },
-  imageContainer: {
-    flex: 0.45,
-    marginTop: 20,
-    justifyContent: 'center',
+  cartCard: {
+    height: 100,
+    elevation: 15,
+    borderRadius: 10,
+    backgroundColor: COLORS.white,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  detailsContainer: {
-    flex: 0.55,
-    backgroundColor: COLORS.light,
-    marginHorizontal: 7,
-    marginBottom: 7,
-    borderRadius: 20,
-    marginTop: 30,
-    paddingTop: 30,
-  },
-  line: {
-    width: 25,
-    height: 2,
-    backgroundColor: COLORS.dark,
-    marginBottom: 5,
-    marginRight: 3,
+  actionBtn: {
+    width: 80,
+    height: 30,
+    backgroundColor: COLORS.primary,
+    borderRadius: 30,
+    paddingHorizontal: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   borderBtn: {
     borderColor: 'grey',
@@ -148,8 +121,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 40,
   },
-  borderBtnText: { fontWeight: 'bold', fontSize: 28 },
+  borderBtnText: { fontWeight: 'bold', fontSize: 18 }, 
   buyBtn: {
+    marginTop: 20,
     width: 130,
     height: 50,
     backgroundColor: COLORS.green,
@@ -157,14 +131,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 30,
   },
-  priceTag: {
-    backgroundColor: COLORS.green,
-    width: 80,
-    height: 40,
-    justifyContent: 'center',
-    borderTopLeftRadius: 25,
-    borderBottomLeftRadius: 25,
-  },
+
 });
 
 export default CartScreen;
