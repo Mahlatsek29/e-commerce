@@ -3,8 +3,11 @@ import { SafeAreaView, StyleSheet, View, Text, Image, FlatList } from 'react-nat
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/colors';
+import { useNavigation } from '@react-navigation/native';
 
-const CartScreen = ({ navigation }) => {
+const CartScreen = () => {
+  const navigation = useNavigation();
+
   const plantsInCart = [
     { id: 1, img: require('../assets/plant1.png'), plant: 'Plant 1', price: 10, quantity: 1 },
     { id: 2, img: require('../assets/plant2.png'), plant: 'Plant 2', price: 20, quantity: 2 },
@@ -26,22 +29,14 @@ const CartScreen = ({ navigation }) => {
         <View style={{ height: 100, marginLeft: 10, paddingVertical: 20, flex: 1 }}>
           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.plant}</Text>
           <Text style={{ fontSize: 17, fontWeight: 'bold' }}>${item.price}</Text>
-        </View> 
+        </View>
         <View style={styles.minusBtn}>
-  <Text style={styles.minusBtnText}>-</Text>
-</View>
-<Text
-  style={{
-    fontSize: 20,
-    marginHorizontal: 10,
-    fontWeight: 'bold',
-  }}
->
-  1
-</Text>
-<View style={styles.plusBtn}>
-  <Text style={styles.plusBtnText}>+</Text>
-</View>
+          <Text style={styles.minusBtnText}>-</Text>
+        </View>
+        <Text style={{ fontSize: 20, marginHorizontal: 10, fontWeight: 'bold' }}>{item.quantity}</Text>
+        <View style={styles.plusBtn}>
+          <Text style={styles.plusBtnText}>+</Text>
+        </View>
         <View style={{ marginRight: 20, alignItems: 'center' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.quantity}</Text>
           <View style={styles.actionBtn}>
@@ -75,7 +70,9 @@ const CartScreen = ({ navigation }) => {
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>${calculateTotalPrice(plantsInCart)}</Text>
             </View>
             <View style={styles.buyBtn}>
-              <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>CHECKOUT</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Payment')} style={styles.button}>
+                <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>CHECKOUT</Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -112,16 +109,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  borderBtn: {
-    borderColor: 'grey',
-    borderWidth: 1,
+  minusBtn: {
+    width: 20,
+    height: 25,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: COLORS.dark,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
-    height: 40,
   },
-  borderBtnText: { fontWeight: 'bold', fontSize: 18 }, 
+  minusBtnText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  plusBtn: {
+    width: 20,
+    height: 25,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: COLORS.dark,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  plusBtnText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
   buyBtn: {
     marginTop: 20,
     width: 130,
@@ -131,7 +144,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 30,
   },
-
 });
 
 export default CartScreen;

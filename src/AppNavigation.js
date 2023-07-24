@@ -15,6 +15,7 @@ const ProductStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="Product" component={ProductScreen} />
     <Stack.Screen name="Cart" component={CartScreen} />
+    <Stack.Screen name="Payment" component={PaymentScreen}/>
   </Stack.Navigator>
 );
 
