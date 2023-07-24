@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.subtitle}>Explore a world of plants at your fingertips!</Text>
       <Button
         title="Get Started"
-        onPress={() => navigation.navigate('ProductScreen')}
+        onPress={() => navigation.navigate('Product')}
         style={styles.button}
       />
     </View>

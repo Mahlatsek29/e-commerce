@@ -1,33 +1,50 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// Import the required screens from the correct file paths
+import WelcomeScreen from './src/screens/WelcomeScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProductScreen from './src/screens/ProductScreen';
 import CartScreen from './src/screens/CartScreen';
-
-const Stack = createStackNavigator();
+import PaymentScreen from './src/screens/PaymentScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import SignUpScreen from './src/screens/SignupScreen';
 
 const Tab = createBottomTabNavigator();
-
-const ProductStack = () => (
-  
-  
-  <Stack.Navigator initialRouteName="Home">
-    <Stack.Screen name="Home" component={HomeScreen}/>
-    <Stack.Screen name="Product" component={ProductScreen} />
-    <Stack.Screen name="Cart" component={CartScreen} />
-  </Stack.Navigator>
-);
 
 const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
+      <Tab.Screen
+ name="Welcome"
+ component={WelcomeScreen}
+ options={{
+   tabBarIcon: ({ color, size }) => (
+     <Icon name="" size={size} color={color} />
+            ),
+          }}
+        />
         <Tab.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="user" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="user-plus" size={size} color={color} />
+            ),
+          }}
+        />
+         <Tab.Screen
           name="Home"
           component={HomeScreen}
           options={{
@@ -37,7 +54,7 @@ const App = () => {
           }}
         />
         <Tab.Screen
-          name="ProductScreen"
+          name="Product"
           component={ProductScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
@@ -45,15 +62,24 @@ const App = () => {
             ),
           }}
         />
-         <Tab.Screen
-          name="CartScreen"
+        <Tab.Screen
+          name="Cart"
           component={CartScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icon name="shopping-cart" size={size} color={color} />
             ),
           }}
-          />
+        />
+        <Tab.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="credit-card" size={size} color={color} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

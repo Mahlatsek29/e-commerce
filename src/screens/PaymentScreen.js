@@ -1,20 +1,18 @@
+
 import React, { useState } from "react";
+import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
-import { Text, View, ScrollView, TextInput, Button, StyleSheet } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  Button,
+} from "react-native";
+import { Paystack } from "react-native-paystack-webview";
 
-// Define the new COLORS object
-const COLORS = {
-  white: '#fff',
-  dark: '#000',
-  red: '#F52A2A',
-  light: '#F1F1F1',
-  green: '#00B761',
-};
-
-// Import the PaymentScreen component
-import PaymentScreen from './PaymentScreen';
-
-export default function App() {
+export default function PaymentScreen() {
   const [pay, setPay] = useState(false);
   const [billingDetail, setBillingDetail] = useState({
     billingName: "",
@@ -28,62 +26,109 @@ export default function App() {
   };
 
   const handleSubmit = () => {
-    // Implement your payment logic here
-    // For this example, let's just show the PaymentScreen when the user clicks on "Pay Now" button
-    setPay(true);
+    if (
+      billingDetail.billingName &&
+      billingDetail.billingEmail &&
+      billingDetail.billingMobile &&
+      billingDetail.amount
+    ) {
+      // Ensure the amount is a valid number
+      const numericAmount = parseFloat(billingDetail.amount);
+      if (!isNaN(numericAmount)) {
+        setBillingDetail((prevState) => ({ ...prevState, amount: numericAmount }));
+        setPay(true);
+      } else {
+        Toast.show("Amount must be a valid number", {
+          duration: Toast.durations.LONG,
+        });
+      }
+    } else {
+      Toast.show("Fill in all fields", {
+        duration: Toast.durations.LONG,
+      });
+    }
   };
 
-  if (pay) {
-    // Render the PaymentScreen when pay is true
-    return <PaymentScreen />;
-  }
-
   return (
-    <ScrollView>
-      <View style={styles.appBar}>
-        <Text style={styles.appBarTitle}>React Native and Paystack</Text>
-      </View>
-      <View style={styles.body}>
-        <TextInput
-          style={styles.input}
-          placeholder="Billing Name"
-          onChangeText={(text) => handleOnchange(text, "billingName")}
-          value={billingDetail?.billingName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Billing Email"
-          onChangeText={(text) => handleOnchange(text, "billingEmail")}
-          value={billingDetail?.billingEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Billing Mobile"
-          onChangeText={(text) => handleOnchange(text, "billingMobile")}
-          value={billingDetail?.billingMobile}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Amount"
-          onChangeText={(text) => handleOnchange(text, "amount")}
-          value={billingDetail?.amount}
-        />
-        <Button
-          title="Pay Now"
-          color={COLORS.green} // Set the color for the button using COLORS.green
-          accessibilityLabel="pay now"
-          onPress={handleSubmit}
-        />
-      </View>
-    </ScrollView>
+    <RootSiblingParent>
+      <ScrollView>
+        <View style={styles.appBar}>
+          <Text style={styles.appBarTitle}>Payment</Text>
+        </View>
+        <View style={styles.body}>
+          <TextInput
+            style={styles.input}
+            placeholder="Billing Name"
+            onChangeText={(text) => handleOnchange(text, "billingName")}
+            value={billingDetail?.billingName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Billing Email"
+            onChangeText={(text) => handleOnchange(text, "billingEmail")}
+            value={billingDetail?.billingEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Billing Mobile"
+            onChangeText={(text) => handleOnchange(text, "billingMobile")}
+            value={billingDetail?.billingMobile}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Amount"
+            onChangeText={(text) => handleOnchange(text, "amount")}
+            value={billingDetail?.amount}
+            keyboardType="numeric" 
+          />
+
+          <Button
+            title="Pay Now"
+            color="#841584"
+            accessibilityLabel="pay now"
+            onPress={handleSubmit}
+          />
+
+          {pay && (
+            <View style={{ flex: 1 }}>
+              <Paystack
+                paystackKey="pk_test_df2662d0591d57ddab2bcef149d5193725de4275"
+                amount={25000} 
+                currency="ZAR"
+                billingEmail={billingDetail.billingEmail}
+                billingMobile={billingDetail.billingMobile}
+                activityIndicatorColor="green"
+
+                onCancel={(e) => {
+                    console.log(e);
+                  Toast.show("Transaction Cancelled!!", {
+                    duration: Toast.durations.LONG,
+                  });
+                }}
+                onSuccess={(response) => {
+                  console.log(response);
+                  const responseObject = response["transactionRef"]["message"];
+                  if (responseObject === "Approved") {
+                    Toast.show("Transaction Approved!!", {
+                      duration: Toast.durations.LONG,
+                    });
+                  }
+                }}
+                autoStart={true}
+              />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </RootSiblingParent>
   );
 }
 
 const styles = StyleSheet.create({
   appBar: {
-    backgroundColor: COLORS.white, 
+    backgroundColor: "#fff",
     height: 95,
-    borderBottomColor: COLORS.light, 
+    borderBottomColor: "#ccc",
     borderBottomWidth: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -91,13 +136,13 @@ const styles = StyleSheet.create({
   appBarTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: COLORS.red, 
+    color: "#841584",
   },
   body: {
     padding: 10,
   },
   input: {
-    borderColor: COLORS.dark, 
+    borderColor: "black",
     borderWidth: 2,
     padding: 10,
     marginTop: 15,

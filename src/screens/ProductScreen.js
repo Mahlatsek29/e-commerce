@@ -17,6 +17,7 @@ const width = Dimensions.get('window').width / 2 - 30;
 
 const ProductScreen = ({ navigation }) => {
   const [categoryIndex, setCategoryIndex] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
   const categories = ['POPULAR', 'ORGANIC', 'INDOORS', 'SYNTHETIC'];
 
@@ -41,6 +42,10 @@ const ProductScreen = ({ navigation }) => {
         ))}
       </View>
     );
+  };
+
+  const addToCart = (item) => {
+    setCartItems((prevCartItems) => [...prevCartItems, item]);
   };
 
   const Card = ({ plant }) => {
@@ -89,9 +94,10 @@ const ProductScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ fontSize: 19, fontWeight: 'bold' }}>
-              ${plant.price}
+              R{plant.price}
             </Text>
-            <View
+            <TouchableOpacity
+              onPress={() => addToCart(plant)}
               style={{
                 height: 25,
                 width: 25,
@@ -106,7 +112,7 @@ const ProductScreen = ({ navigation }) => {
               >
                 +
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -119,14 +125,16 @@ const ProductScreen = ({ navigation }) => {
     >
       <View style={styles.header}>
         <View>
-          <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Welcome to</Text>
+          
           <Text
             style={{ fontSize: 38, color: COLORS.green, fontWeight: 'bold' }}
           >
             Plant Shop
           </Text>
         </View>
-        <Icon name="shopping-cart" size={28} />
+        <TouchableOpacity onPress={() => navigation.navigate('CartScreen', cartItems)}>
+          <Icon name="shopping-cart" size={28} />
+        </TouchableOpacity>
       </View>
       <View style={{ marginTop: 30, flexDirection: 'row' }}>
         <View style={styles.searchContainer}>
