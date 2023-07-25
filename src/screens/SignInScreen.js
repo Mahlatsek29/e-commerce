@@ -1,4 +1,4 @@
-// Import the necessary modules
+
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -11,13 +11,13 @@ const COLORS = {
   green: '#00B761',
 };
 
-const LoginScreen = () => {
+const SignInScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    console.log("Login clicked!");
+    console.log("Sign in clicked!");
     navigation.navigate("Home"); 
   };
 
@@ -45,8 +45,8 @@ const LoginScreen = () => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-        <Text style={styles.loginText}>LOGIN</Text>
+      <TouchableOpacity style={styles.signinBtn} onPress={handleLogin}>
+        <Text style={styles.signinText}>SIGN IN</Text>
       </TouchableOpacity>
 
       <Text>Don't have an account?</Text>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 20,
   },
-  loginBtn: {
+  signinBtn: {
     width: "70%",
     borderRadius: 25,
     height: 50,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: COLORS.red,
   },
-  loginText: {
+  signinText: {
     color: COLORS.white,
   },
   signupBtn: {
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignInScreen;

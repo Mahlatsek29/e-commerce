@@ -25,7 +25,7 @@ const SignUpScreen = () => {
 
   const handleLogin = () => {
     
-    console.log("Login clicked!");
+    console.log("Sign in clicked!");
     navigation.navigate("Home");
   };
 

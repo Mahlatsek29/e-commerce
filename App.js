@@ -8,7 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import ProductScreen from './src/screens/ProductScreen';
 import CartScreen from './src/screens/CartScreen';
 import PaymentScreen from './src/screens/PaymentScreen';
-import LoginScreen from './src/screens/LoginScreen';
+import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignupScreen';
 
 const Tab = createBottomTabNavigator();
@@ -27,8 +27,8 @@ const App = () => {
           }}
         />
         <Tab.Screen
-          name="Login"
-          component={LoginScreen}
+          name="SignIn"
+          component={SignInScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icon name="user" size={size} color={color} />

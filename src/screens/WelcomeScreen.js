@@ -22,10 +22,10 @@ const WelcomeScreen = ({ navigation }) => {
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.loginBtn, { backgroundColor: COLORS.red }]}
-          onPress={() => navigation.navigate('Login')}
+          style={[styles.signinBtn, { backgroundColor: COLORS.red }]}
+          onPress={() => navigation.navigate('SignIn')}
         >
-          <Text style={styles.loginText}>LOGIN</Text>
+          <Text style={styles.signinText}>SIGN IN</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.signupBtn, { backgroundColor: COLORS.red }]}
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 32,
   },
-  loginBtn: {
+  signinBtn: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 75,
   },
-  loginText: {
+  signinText: {
     color: COLORS.white,
     fontSize: 16,
     textAlign: 'center',

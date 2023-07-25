@@ -93,7 +93,7 @@ export default function PaymentScreen() {
             <View style={{ flex: 1 }}>
               <Paystack
                 paystackKey="pk_test_df2662d0591d57ddab2bcef149d5193725de4275"
-                amount={25000} 
+                amount={250} 
                 currency="ZAR"
                 billingEmail={billingDetail.billingEmail}
                 billingMobile={billingDetail.billingMobile}

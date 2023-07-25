@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import WelcomeScreen from './screens/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
+import SignInScreen from './screens/SignInScreen';
 import SignupScreen from './screens/SignupScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
 
 const ProductStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="SignIn" component={SignInScreen} />
     <Stack.Screen name="Signup" component={SignupScreen} />
     <Stack.Screen name="Product" component={ProductScreen} />
     <Stack.Screen name="Cart" component={CartScreen} />
@@ -39,8 +39,8 @@ const AppNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Login"
-          component={LoginScreen}
+          name="SignIn"
+          component={SignInScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icon name="user" size={size} color={color} />
