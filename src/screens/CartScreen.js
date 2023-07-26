@@ -134,13 +134,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   checkoutBtn: {
-    marginTop: 20,
-    width: 130,
+    width: 120,
     height: 50,
     backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
+    
   },
 });
 

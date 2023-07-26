@@ -1,10 +1,30 @@
-import React from 'react';
-import { View, SafeAreaView, Image, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, SafeAreaView, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/colors';
 
 const DetailsScreen = ({ navigation, route }) => {
   const plant = route.params;
+  const [cartItems, setCartItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  const increaseQuantityHandler = () => {
+    setSelectedQuantity(selectedQuantity + 1);
+  };
+
+  const decreaseQuantityHandler = () => {
+    if (selectedQuantity > 1) {
+      setSelectedQuantity(selectedQuantity - 1);
+    }
+  };
+
+  const addToCartHandler = () => {
+    const updatedCartItems = [...cartItems, { ...plant, quantity: selectedQuantity }];
+    setCartItems(updatedCartItems);
+    const updatedTotalAmount = totalAmount + plant.price * selectedQuantity;
+    setTotalAmount(updatedTotalAmount);
+  };
 
   return (
     <SafeAreaView
@@ -23,7 +43,7 @@ const DetailsScreen = ({ navigation, route }) => {
       <View style={styles.detailsContainer}>
         <View
           style={{
-            marginLeft: 20,
+            marginLeft: 5,
             flexDirection: 'row',
             alignItems: 'flex-end',
           }}
@@ -50,12 +70,12 @@ const DetailsScreen = ({ navigation, route }) => {
                 fontSize: 16,
               }}
             >
-              ${plant.price}
+              R{plant.price}
             </Text>
           </View>
         </View>
         <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>About</Text>
+          <Text style={{ fontSize: 15, fontWeight: 'bold' }}>About</Text>
           <Text
             style={{
               color: 'grey',
@@ -73,15 +93,16 @@ const DetailsScreen = ({ navigation, route }) => {
               justifyContent: 'space-between',
             }}
           >
+            {/* Quantity */}
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
             >
-              <View style={styles.borderBtn}>
+              <TouchableOpacity style={styles.borderBtn} onPress={decreaseQuantityHandler}>
                 <Text style={styles.borderBtnText}>-</Text>
-              </View>
+              </TouchableOpacity>
               <Text
                 style={{
                   fontSize: 20,
@@ -89,19 +110,20 @@ const DetailsScreen = ({ navigation, route }) => {
                   fontWeight: 'bold',
                 }}
               >
-                1
+                {selectedQuantity}
               </Text>
-              <View style={styles.borderBtn}>
+              <TouchableOpacity style={styles.borderBtn} onPress={increaseQuantityHandler}>
                 <Text style={styles.borderBtnText}>+</Text>
-              </View>
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.buyBtn}>
-              <Text
-                style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}
-              >
-                Buy
-              </Text>
+            {/* Add to Cart Button */}
+            <View style={styles.addtoCartBtn}>
+              <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.button}>
+                <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>
+                  Add To Cart
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -113,23 +135,23 @@ const DetailsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   imageContainer: {
-    flex: 0.45,
+    flex: 0.4,
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   detailsContainer: {
-    flex: 0.55,
+    flex: 1,
     backgroundColor: COLORS.light,
     marginHorizontal: 7,
     marginBottom: 7,
     borderRadius: 20,
-    marginTop: 30,
+    marginTop: 5,
     paddingTop: 30,
   },
   line: {
@@ -145,12 +167,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
+    width: 40,
     height: 40,
   },
   borderBtnText: { fontWeight: 'bold', fontSize: 28 },
-  buyBtn: {
-    width: 130,
+  addtoCartBtn: {
+    width: 120,
     height: 50,
     backgroundColor: COLORS.green,
     justifyContent: 'center',
