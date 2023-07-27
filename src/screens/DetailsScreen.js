@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { View, SafeAreaView, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../consts/colors';
+import { addToCart } from '../redux/actions/cartActions';
 
-const DetailsScreen = ({ navigation, route }) => {
+const DetailsScreen = ({ navigation, route, cartItems, addToCart, totalAmount }) => {
   const plant = route.params;
-  const [cartItems, setCartItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [selectedQuantity, setSelectedQuantity] = React.useState(1);
 
   const increaseQuantityHandler = () => {
     setSelectedQuantity(selectedQuantity + 1);
@@ -20,109 +20,56 @@ const DetailsScreen = ({ navigation, route }) => {
   };
 
   const addToCartHandler = () => {
-    const updatedCartItems = [...cartItems, { ...plant, quantity: selectedQuantity }];
-    setCartItems(updatedCartItems);
-    const updatedTotalAmount = totalAmount + plant.price * selectedQuantity;
-    setTotalAmount(updatedTotalAmount);
+    addToCart(plant, selectedQuantity);
+    navigation.navigate('Cart', { cartItems, totalAmount });
+  };
+
+  const calculateTotalProducts = () => {
+    let totalProducts = 0;
+    cartItems.forEach((item) => {
+      totalProducts += item.quantity;
+    });
+    return totalProducts;
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.white,
-      }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={styles.header}>
         <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-        <Icon name="shopping-cart" size={28} />
+        <Icon name="shopping-cart" size={28} onPress={() => navigation.navigate('Cart')} />
       </View>
       <View style={styles.imageContainer}>
         <Image source={plant.img} style={{ resizeMode: 'contain', flex: 1 }} />
       </View>
       <View style={styles.detailsContainer}>
-        <View
-          style={{
-            marginLeft: 5,
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-          }}
-        >
+        <View style={{ marginLeft: 5, flexDirection: 'row', alignItems: 'flex-end' }}>
           <View style={styles.line} />
           <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Best choice</Text>
         </View>
-        <View
-          style={{
-            marginLeft: 20,
-            marginTop: 20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+        <View style={{ marginLeft: 20, marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{plant.name}</Text>
           <View style={styles.priceTag}>
-            <Text
-              style={{
-                marginLeft: 15,
-                color: COLORS.white,
-                fontWeight: 'bold',
-                fontSize: 16,
-              }}
-            >
-              R{plant.price}
-            </Text>
+            <Text style={{ marginLeft: 15, color: COLORS.white, fontWeight: 'bold', fontSize: 16 }}>R{plant.price}</Text>
           </View>
         </View>
         <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
           <Text style={{ fontSize: 15, fontWeight: 'bold' }}>About</Text>
-          <Text
-            style={{
-              color: 'grey',
-              fontSize: 16,
-              lineHeight: 22,
-              marginTop: 10,
-            }}
-          >
-            {plant.about}
-          </Text>
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
+          <Text style={{ color: 'grey', fontSize: 16, lineHeight: 22, marginTop: 10 }}>{plant.about}</Text>
+          <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
             {/* Quantity */}
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity style={styles.borderBtn} onPress={decreaseQuantityHandler}>
                 <Text style={styles.borderBtnText}>-</Text>
               </TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginHorizontal: 10,
-                  fontWeight: 'bold',
-                }}
-              >
-                {selectedQuantity}
-              </Text>
+              <Text style={{ fontSize: 20, marginHorizontal: 10, fontWeight: 'bold' }}>{selectedQuantity}</Text>
               <TouchableOpacity style={styles.borderBtn} onPress={increaseQuantityHandler}>
                 <Text style={styles.borderBtnText}>+</Text>
               </TouchableOpacity>
             </View>
-
             {/* Add to Cart Button */}
             <View style={styles.addtoCartBtn}>
-              <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.button}>
-                <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>
-                  Add To Cart
-                </Text>
+              <TouchableOpacity onPress={addToCartHandler} style={styles.button}>
+                <Text style={{ color: COLORS.white, fontSize: 18, fontWeight: 'bold' }}>Add To Cart</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -131,6 +78,16 @@ const DetailsScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
+
+
+const mapStateToProps = (state) => {
+  return {
+    cartItems: state.cart.cartItems,
+    totalAmount: state.cart.totalAmount,
+  };
+};
+
+export default connect(mapStateToProps, { addToCart })(DetailsScreen);
 
 const styles = StyleSheet.create({
   header: {
@@ -187,6 +144,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderBottomLeftRadius: 25,
   },
+  totalContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
 });
 
-export default DetailsScreen;
