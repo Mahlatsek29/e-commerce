@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import { Paystack } from "react-native-paystack-webview";
 
-export default function PaymentScreen() {
+export default function PaymentScreen({ route }) {
+  const { cartItems, totalAmount } = route.params;
+
   const [pay, setPay] = useState(false);
   const [billingDetail, setBillingDetail] = useState({
     billingName: "",
@@ -32,7 +34,7 @@ export default function PaymentScreen() {
       billingDetail.billingMobile &&
       billingDetail.amount
     ) {
-      // Ensure the amount is a valid number
+      
       const numericAmount = parseFloat(billingDetail.amount);
       if (!isNaN(numericAmount)) {
         setBillingDetail((prevState) => ({ ...prevState, amount: numericAmount }));
@@ -81,6 +83,10 @@ export default function PaymentScreen() {
             value={billingDetail?.amount}
             keyboardType="numeric" 
           />
+          <View style={styles.totalContainer}>
+            <Text style={styles.totalTitle}>Total Amount</Text>
+            <Text style={styles.totalAmount}>R{totalAmount}</Text>
+          </View>
 
           <Button
             title="Pay Now"
@@ -93,14 +99,14 @@ export default function PaymentScreen() {
             <View style={{ flex: 1 }}>
               <Paystack
                 paystackKey="pk_test_df2662d0591d57ddab2bcef149d5193725de4275"
-                amount={250} 
+                amount={billingDetail.amount * 100} // Paystack amount is in kobo (multiply by 100 to convert to kobo)
                 currency="ZAR"
                 billingEmail={billingDetail.billingEmail}
                 billingMobile={billingDetail.billingMobile}
                 activityIndicatorColor="green"
 
                 onCancel={(e) => {
-                    console.log(e);
+                  console.log(e);
                   Toast.show("Transaction Cancelled!!", {
                     duration: Toast.durations.LONG,
                   });

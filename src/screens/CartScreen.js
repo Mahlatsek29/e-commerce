@@ -27,9 +27,10 @@ const CartScreen = ({ navigation, route, cartItems, totalAmount }) => {
       setTotalAmount(updatedTotalAmount);
     }
   };
+
   // Checkout Button Press Handler
   const handleCheckoutPress = () => {
-    navigation.navigate('Payment', { cartItems });
+    navigation.navigate('Payment', { cartItems, totalAmount });
   };
 
   return (
@@ -110,21 +111,6 @@ const CartScreen = ({ navigation, route, cartItems, totalAmount }) => {
     </SafeAreaView>
   );
 };
-
-const mapStateToProps = (state) => {
-  return {
-    cartItems: state.cart.cartItems,
-    totalAmount: state.cart.totalAmount,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addToCart: (cartItems) => dispatch(addToCart(cartItems)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
 
 const styles = StyleSheet.create({
 container: {
@@ -255,3 +241,18 @@ cartItemRow: {
   marginTop: 10,
 },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    cartItems: state.cart.cartItems,
+    totalAmount: state.cart.totalAmount,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (cartItems) => dispatch(addToCart(cartItems)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
